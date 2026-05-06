@@ -1,55 +1,3 @@
-// // fetch(resource(url))
-// fetch('http://localhost:8000/users')
-//     .then(response => response.json()) // converts into bjavascrfipt data
-//     .then(data=>{
-//         const userList = document.getElementById('userList');
-
-//         data.forEach(user=>{
-//             const li = document.createElement('li');
-//             li.textContent = user.name;
-//             userList.appendChild(li);
-//         });
-//     })
-//     .catch(error => console.error(error));
-
-
-
-// fetch('https://jsonplaceholder.typicode.com/posts')
-//     .then(response=>response.json())
-//     .then(data=> {
-//         const postItems = document.getElementById('postItems');
-
-//         data.forEach(post => {
-//             const div = document.createElement('div');
-//             div.innerHTML = `
-//             <h3> ${post.title}</h3>
-//             <p> ${post.body}</p>
-//             `;
-//             postItems.appendChild(div);
-//         });
-//     })
-//     .catch(error=>console.error(error));
-
-
-
-// asynchronous code
-
-// async function getData() {
-//     const response = await fetch('https://jsonplaceholder.typicode.com/albums');
-//     const data = await response.json();
-
-//     const albumList = document.getElementById('albumList');
-
-//     data.forEach(album =>{
-//         const li = document.createElement('li');
-//         li.textContent = album.title;
-//         albumList.appendChild(li);
-
-//     });
-
-// };
-
-// getData();
 
 // fetch('http://localhost:3000/employees')
 //     .then(response => response.json())
@@ -90,12 +38,17 @@
 
 //API base url - jason-server is running in port 3000
 const BASE_URL = 'http://localhost:3000/employees';
+let employees = [];
 
 
 async function getData() {
     const response = await fetch(BASE_URL);
-    const data = await response.json();
+    employees = await response.json();
 
+    renderTable(employees);
+}
+
+function renderTable(data){
     const tableBody = document.getElementById('empTable');
 
     data.forEach(employee => {
@@ -120,12 +73,15 @@ async function getData() {
 
         const editBtn = document.createElement('button');
         editBtn.className = 'btn btn-success';
+        editBtn.type= 'button';
         // editBtn.setAttribute('onclick', openEditForm(employee.id));
         editBtn.onclick = () => openEditForm(employee.id);
         editBtn.textContent = 'Edit';
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn btn-danger';
+        deleteBtn.type= 'button';
         deleteBtn.textContent = 'Delete';
+        deleteBtn.onclick= ()=>handleDelete(employee.id);
         activityrow.appendChild(editBtn);
         activityrow.appendChild(deleteBtn);
 
@@ -137,11 +93,9 @@ async function getData() {
         row.appendChild(activecell);
         row.appendChild(activityrow);
 
-        
-
         tableBody.appendChild(row);
     });
-}
+};
 
 getData();
 
@@ -156,6 +110,17 @@ D - DELETE - remove a resource              -DELETE
 /*
 POST (CREATE)- adding a new employee
 */
+const showForm = document.getElementById('showForm');
+showForm.addEventListener('click', function(){
+    const addCard =document.getElementById('addCard');
+    addCard.classList.toggle('d-none');
+    if (addCard.classList.contains('d-none')){
+        showForm.textContent = ' + New Employee';
+    }else{
+        showForm.textContent = 'close';
+    }
+});
+
 const form = document.getElementById('addForm');
 
 form.addEventListener('submit', handleSubmit);
@@ -182,10 +147,8 @@ function handleSubmit(event){
 
     // form.reset();
     event.target.reset();
-    getData();
 
 }
-
 
 /*
 UPDATE 
@@ -223,4 +186,61 @@ editForm.addEventListener('submit', handleEdit);
 
 function handleEdit(e){
     e.preventDefault();
+
+    const id = document.getElementById('editId').value
+
+    const updatedData = {
+        name: document.getElementById('editName').value,
+        dept: document.getElementById('editDept').value,
+        salary: Number(document.getElementById('editSalary').value),
+        active: document.getElementById('editActive').value === 'true' 
+        // JSON.parse(), Boolean()
+    }
+
+    fetch(`${BASE_URL}/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedData)
+    });
+    console.log(response.ok);
+    //hide edit form
+    document.getElementById('editCard').classList.add('d-none');
 }
+
+// CANCEL EDIT
+document.getElementById('cancelEdit').addEventListener('click', function(){
+    editForm.reset();
+    document.getElementById('editCard').classList.add('d-none');
+});
+
+
+/*
+DELETE - Remove a resource
+
+*/
+
+function handleDelete(id){
+    //always confirm before deleting
+    const confirmed = confirm('Are you sure you want to delete this employee?');
+
+    if (!confirmed) return;
+
+    fetch(`${BASE_URL}/${id}`, {
+        method: 'DELETE'
+        //No headers or body needed for a DELETE request
+    });
+
+}
+
+// SEARCH 
+
+document.getElementById('searchInput').addEventListener('input', function(e){
+    const value = e.target.value.toLowerCase();
+    
+    const filteredData = employees.filter(emp => 
+        emp.name.toLowerCase().includes(value) || emp.dept.toLowerCase().includes(value)
+    );
+    console.log(filteredData);
+})

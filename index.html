@@ -21,31 +21,43 @@
 
     <h3>Employee management</h3>
 
+
+    <div class="d-flex p-2">
+        <button class="btn btn-success p-2" id="showForm"> + New Employee</button>
+        <div class="input-group rounded w-50 ml-0 p-2">
+            <input type="text" class="form-control rounded " placeholder="Search by name or department..."
+                id=searchInput />
+        </div>
+    </div>
+
     <!-- ----ADD EMPLOYEE FORM---- -->
-    <h3>Add New Employee</h3>
-    <form id="addForm">
-        <div class="mb-3 w-50">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" id="nameInput" class="form-control" placeholder="Fullname" required>
-        </div>
-        <div class="mb-3 w-50">
-            <label for="dept" class="form-label">Department</label>
-            <input type="text" id="deptInput" class="form-control" placeholder="Department" required>
-        </div>
-        <div class="mb-3 w-50">
-            <label for="salary" class="form-label">Salary (KES)</label>
-            <input type="number" id="salaryInput" class="form-control" placeholder="e.g. 90000" required>
-        </div>
-        <!-- <div class="mb-3 w-50">
+    <div class="d-none" id="addCard">
+        <h3>Add New Employee</h3>
+        <form id="addForm">
+            <div class="mb-3 w-50">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" id="nameInput" class="form-control" placeholder="Fullname" required>
+            </div>
+            <div class="mb-3 w-50">
+                <label for="dept" class="form-label">Department</label>
+                <input type="text" id="deptInput" class="form-control" placeholder="Department" required>
+            </div>
+            <div class="mb-3 w-50">
+                <label for="salary" class="form-label">Salary (KES)</label>
+                <input type="number" id="salaryInput" class="form-control" placeholder="e.g. 90000" required>
+            </div>
+            <!-- <div class="mb-3 w-50">
             <label for="active" class="form-label">Status</label>
             <select id="active" class="form-select">
                 <option value="true">Active</option>
                 <option value="false">Inactive</option>
             </select>
         </div> -->
-        <button type="submit" class="btn btn-success">Submit</button>
-    </form>
-    <br><br>
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+    </div>
+
+    <br>
 
     <H4>Employees</H4>
     <table class="table">
@@ -88,7 +100,7 @@
                     </select>
                 </div>
                 <div>
-                    <button type="submit" class="btn btn-outline-primary" >Save Changes</button>
+                    <button type="submit" class="btn btn-outline-primary">Save Changes</button>
                     <button type="button" id="cancelEdit" class="btn btn-outline-secondary">Cancel</button>
                 </div>
             </form>
